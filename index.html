@@ -11,8 +11,8 @@
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="assets/xv-hero.png" as="image" />
     <link rel="preload" href="img/lugar.jpeg" as="image" />
-    <link rel="stylesheet" href="styles.css?v=video-play-20260614" />
-    <script src="script.js?v=video-play-20260614" defer></script>
+    <link rel="stylesheet" href="styles.css?v=formspree-clear-20260614" />
+    <script src="script.js?v=formspree-clear-20260614" defer></script>
   </head>
   <body>
     <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
@@ -247,9 +247,9 @@
         <div class="section-inner song-request-layout">
           <img class="song-disc-image reveal" src="img/disco.jpeg" alt="Disco de música" />
           <div class="song-request-panel reveal">
-            <form class="song-request-card" id="songRequestForm">
+            <form class="song-request-card" id="songRequestForm" action="https://formspree.io/f/xeewvdjb" method="POST">
               <label for="songRequest">¿Qué canción te gustaría escuchar?</label>
-              <textarea id="songRequest" name="songRequest" rows="4"></textarea>
+              <textarea id="songRequest" name="message" rows="4"></textarea>
               <button class="solid-button song-submit" type="submit">Enviar recomendación</button>
               <p class="song-status" id="songStatus" aria-live="polite"></p>
             </form>

@@ -1,6 +1,7 @@
 const EVENT_DATE = new Date("2026-07-11T19:00:00-05:00");
 const SPOTIFY_TRACK_URI = "spotify:track:2lTm559tuIvatlT1u0JYG2";
 const SPOTIFY_IFRAME_API_URL = "https://open.spotify.com/embed/iframe-api/v1";
+const FORMSPREE_SONG_ENDPOINT = "https://formspree.io/f/xeewvdjb";
 const FIREBASE_SDK_VERSION = "10.12.5";
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyDzY1PY2ZR5z6dk1Vkqg1KsJm8-mSaSGao",
@@ -382,12 +383,61 @@ if (songRequest) {
   });
 }
 
-songRequestForm?.addEventListener("submit", (event) => {
+songRequestForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
-  localStorage.setItem(STORAGE_KEYS.songRequest, songRequest?.value || "");
-  if (songStatus) songStatus.textContent = "Recomendación enviada";
-  const rect = songRequestForm.getBoundingClientRect();
-  createSparkBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 18);
+  const recommendation = (songRequest?.value || "").trim();
+  localStorage.setItem(STORAGE_KEYS.songRequest, recommendation);
+
+  if (!recommendation) {
+    if (songStatus) songStatus.textContent = "Escribe una canción para enviarla.";
+    return;
+  }
+
+  const submitButton = $(".song-submit", songRequestForm);
+  const originalButtonText = submitButton?.textContent || "";
+
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = "Enviando...";
+  }
+  if (songStatus) songStatus.textContent = "";
+
+  try {
+    const formData = new FormData(songRequestForm);
+    formData.set("cancion", recommendation);
+    formData.set("message", recommendation);
+    formData.set("origen", "XV de Pau");
+    formData.set("fecha", new Date().toISOString());
+
+    const response = await fetch(FORMSPREE_SONG_ENDPOINT, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+      body: formData,
+    });
+
+    const responseData = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      const formspreeMessage = responseData?.errors?.[0]?.message || responseData?.error;
+      throw new Error(formspreeMessage || "Formspree no aceptó la recomendación.");
+    }
+
+    if (songStatus) songStatus.textContent = "Recomendación enviada";
+    if (songRequest) songRequest.value = "";
+    localStorage.removeItem(STORAGE_KEYS.songRequest);
+    const rect = songRequestForm.getBoundingClientRect();
+    createSparkBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 18);
+  } catch (error) {
+    console.error(error);
+    if (songStatus) songStatus.textContent = "No se pudo enviar. Intenta de nuevo.";
+  } finally {
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
+    }
+  }
 });
 
 const giftEffects = {
