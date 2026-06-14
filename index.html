@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Invitacion web interactiva para los XV de Pau."
+    />
+    <title>XV de Pau | Baile Inolvidable</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="assets/xv-hero.png" as="image" />
+    <link rel="preload" href="img/lugar.jpeg" as="image" />
+    <link rel="stylesheet" href="styles.css?v=video-play-20260614" />
+    <script src="script.js?v=video-play-20260614" defer></script>
+  </head>
+  <body>
+    <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
+
+    <div class="spotify-audio" id="spotifyEmbed" aria-hidden="true"></div>
+
+    <button class="music-disc-button" id="musicToggle" type="button" aria-label="Activar musica" aria-pressed="false">
+      <span class="disc-face" aria-hidden="true"></span>
+      <span class="music-status">PLAY</span>
+    </button>
+    <header class="hero section" id="inicio">
+      <div class="hero-content reveal">
+        <p class="hero-overline">XV de Pau</p>
+        <h1>Bienvenido a mi baile inolvidable</h1>
+        <a class="scroll-button" href="#video">
+          <span aria-hidden="true">↓</span>
+          Desliza para descubrir la experiencia
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <section class="section video-section" id="video">
+        <div class="section-inner video-layout">
+          <h2 class="section-title reveal">Antes de seguir explorando, escucha este mensaje especial para ti.</h2>
+          <div class="video-frame reveal">
+            <video class="intro-video" id="introVideo" playsinline preload="metadata">
+              <source src="video/mensaje-especial.mp4" type="video/mp4" />
+            </video>
+            <button class="video-play-slot" id="introPlayButton" type="button" aria-label="Reproducir video">
+              <span aria-hidden="true"></span>
+            </button>
+            <p class="video-status" id="introVideoStatus" aria-live="polite"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section about-section" id="sobre-mi">
+        <div class="section-inner">
+          <h2 class="section-title reveal">Un poco sobre la protagonista de la noche...</h2>
+          <div class="about-editorial reveal">
+            <div class="about-band">
+              <div class="about-facts">
+                <article class="about-row">
+                  <span class="about-label">Cumple</span>
+                  <strong>22 de junio, 2011</strong>
+                </article>
+                <article class="about-row about-row-music">
+                  <span class="about-label">Instrumentos</span>
+                  <strong>Piano y canto</strong>
+                </article>
+                <article class="about-row">
+                  <span class="about-label">Hobbies</span>
+                  <strong>Programación, diseño gráfico y robótica.</strong>
+                </article>
+                <article class="about-row">
+                  <span class="about-label">Cantantes favoritos</span>
+                  <strong>Bad Bunny y Omar Courtz</strong>
+                </article>
+              </div>
+              <img class="about-photo" src="img/chiquita1.jpeg" alt="Paula de pequeña" />
+            </div>
+
+            <div class="about-band about-band-reverse">
+              <img class="about-photo" src="img/chiquita2.jpeg" alt="Paula de pequeña" />
+              <div class="about-facts">
+                <article class="about-row">
+                  <span class="about-label">Fruta favorita</span>
+                  <strong>Fresa</strong>
+                </article>
+                <article class="about-row">
+                  <span class="about-label">Color favorito</span>
+                  <div class="color-swatches" aria-label="amarillo pastel, baby blue y navy blue">
+                    <span class="color-pastel-yellow"></span>
+                    <span class="color-baby-blue"></span>
+                    <span class="color-navy-blue"></span>
+                  </div>
+                </article>
+                <article class="about-row">
+                  <span class="about-label">Serie favorita</span>
+                  <strong>Stranger Things</strong>
+                </article>
+                <article class="about-row">
+                  <span class="about-label">Flor favorita</span>
+                  <strong>Girasoles</strong>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section event-section" id="evento">
+        <div class="section-inner">
+          <h2 class="section-title reveal">Información del evento</h2>
+
+          <div class="event-block reveal">
+            <div class="event-row">
+              <div class="event-details">
+                <article class="detail-tile">
+                  <span>Fecha</span>
+                  <strong>11 de julio</strong>
+                  <small>Sábado</small>
+                </article>
+                <article class="detail-tile">
+                  <span>Hora</span>
+                  <strong>7:00 p.m.</strong>
+                  <small>El Show inicia a las 7 en punto.</small>
+                </article>
+              </div>
+              <img class="event-photo" src="img/fotoxv1.JPG" alt="Paula" />
+            </div>
+
+            <div class="event-row">
+              <article class="venue-copy">
+                <span>Lugar</span>
+                <strong>Rock &amp; Folk</strong>
+                <small>Calle Uruguay</small>
+                <a
+                  class="solid-button"
+                  href="https://www.google.com/maps/search/?api=1&amp;query=Rock%20%26%20Folk%20Panama"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Ver ubicación
+                </a>
+              </article>
+              <img class="event-photo" src="img/lugar.jpeg" alt="Rock &amp; Folk" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section countdown-section" id="temporizador">
+        <div class="section-inner">
+          <h2 class="section-title reveal">FALTAN...</h2>
+          <div class="countdown-grid reveal" id="countdown" aria-live="polite">
+            <div class="time-box"><strong data-count="days">00</strong><span>DÍAS</span></div>
+            <div class="time-box"><strong data-count="hours">00</strong><span>HORAS</span></div>
+            <div class="time-box"><strong data-count="minutes">00</strong><span>MINUTOS</span></div>
+            <div class="time-box"><strong data-count="seconds">00</strong><span>SEGUNDOS</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section dress-section" id="vestimenta">
+        <div class="section-inner split-layout">
+          <div class="section-copy dress-copy reveal">
+            <h2 class="section-title">Vestimenta</h2>
+            <p class="dress-code">Semiformal</p>
+            <div class="dress-details" aria-label="Detalles de vestimenta">
+              <span>Elegante</span>
+              <span>Cómodo</span>
+              <span>Para bailar</span>
+            </div>
+          </div>
+          <img class="feature-photo reveal" src="img/fotoxv2.JPG" alt="Paula" />
+        </div>
+      </section>
+
+      <section class="section mundial-section" id="mundial">
+        <div class="section-inner mundial-layout">
+          <div class="mundial-note reveal">
+            <div class="mundial-copy">
+              <p class="mundial-match">FIFA World Cup - Partido de Cuartos de Final, 8:00 p.m.</p>
+              <p class="mundial-message">No te preocupes... Habran pantallas</p>
+            </div>
+            <div class="soccer-ball" aria-hidden="true">⚽</div>
+          </div>
+          <div class="photo-trio reveal" aria-hidden="true">
+            <img src="img/fotoxv3.JPG" alt="" />
+            <img src="img/fotoxv5.JPG" alt="" />
+            <img src="img/fotoxv4.JPG" alt="" />
+          </div>
+        </div>
+      </section>
+
+      <section class="section gifts-section" id="regalos">
+        <div class="section-inner split-layout">
+          <div class="section-copy reveal">
+            <h2 class="section-title">Regalos sugeridos</h2>
+            <div class="gift-grid">
+              <button class="gift-card" id="envelopeRain" type="button" data-gift-effect="envelopes">
+                <strong>Lluvia de Sobres</strong>
+              </button>
+              <button class="gift-card" type="button" data-gift-effect="planes">
+                <strong>Yappy</strong>
+              </button>
+              <button class="gift-card" type="button" data-gift-effect="money">
+                <strong>Viajes SPE Gift Card</strong>
+              </button>
+              <button class="gift-card" type="button" data-gift-effect="confetti">
+                <strong>Amazon Gift Card</strong>
+              </button>
+            </div>
+          </div>
+          <div class="photo-trio reveal" aria-hidden="true">
+            <img src="img/fotoxv6.JPG" alt="" />
+            <img src="img/fotoxv8.JPG" alt="" />
+            <img src="img/fotoxv9.JPG" alt="" />
+          </div>
+        </div>
+      </section>
+
+      <section class="section rsvp-section" id="confirmar">
+        <div class="section-inner confirm-layout">
+          <div class="confirm-copy reveal">
+            <h2>Cada invitado hace esta noche aún más especial. ¿Podré contar contigo?</h2>
+            <form class="rsvp-form" id="rsvpLookupForm">
+              <label for="guestEmail">Email</label>
+              <div class="rsvp-search">
+                <input id="guestEmail" name="guestEmail" type="email" autocomplete="email" required />
+                <button class="whatsapp-button" type="submit">Buscar invitación</button>
+              </div>
+            </form>
+            <div class="rsvp-result" id="rsvpResult" hidden>
+              <span>Invitación encontrada</span>
+              <strong id="guestNames"></strong>
+              <p><b id="guestSeats"></b> cupos</p>
+              <button class="solid-button" id="firebaseConfirmButton" type="button">Confirmar asistencia</button>
+            </div>
+            <p class="rsvp-status" id="rsvpStatus" aria-live="polite"></p>
+          </div>
+          <div class="photo-strip final-strip reveal" aria-hidden="true">
+            <img src="img/fotoxv10.JPG" alt="" />
+            <img src="img/fotoxv7.JPG" alt="" />
+          </div>
+        </div>
+      </section>
+
+      <section class="section song-request-section" id="cancion">
+        <div class="section-inner song-request-layout">
+          <img class="song-disc-image reveal" src="img/disco.jpg" alt="Disco de música" />
+          <div class="song-request-panel reveal">
+            <form class="song-request-card" id="songRequestForm">
+              <label for="songRequest">¿Qué canción te gustaría escuchar?</label>
+              <textarea id="songRequest" name="songRequest" rows="4"></textarea>
+              <button class="solid-button song-submit" type="submit">Enviar recomendación</button>
+              <p class="song-status" id="songStatus" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Creado por © Paula Castillo Linero
+    </footer>
+  </body>
+</html>

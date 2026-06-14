@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 768" role="img" aria-label="Disco dorado">
+  <rect width="768" height="768" fill="#050817"/>
+  <circle cx="384" cy="384" r="348" fill="#050505"/>
+  <circle cx="384" cy="384" r="336" fill="none" stroke="#e8c46d" stroke-width="8"/>
+  <circle cx="384" cy="384" r="309" fill="none" stroke="#c89433" stroke-width="5"/>
+  <circle cx="384" cy="384" r="278" fill="none" stroke="#fffaf2" stroke-width="2" opacity=".35"/>
+  <circle cx="384" cy="384" r="246" fill="none" stroke="#e8c46d" stroke-width="3" opacity=".55"/>
+  <circle cx="384" cy="384" r="218" fill="none" stroke="#8d1020" stroke-width="5" opacity=".85"/>
+  <circle cx="384" cy="384" r="186" fill="none" stroke="#fffaf2" stroke-width="2" opacity=".32"/>
+  <circle cx="384" cy="384" r="122" fill="#8d1020"/>
+  <circle cx="384" cy="384" r="80" fill="none" stroke="#c89433" stroke-width="3" opacity=".8"/>
+  <circle cx="384" cy="384" r="13" fill="#050505" stroke="#fffaf2" stroke-width="2"/>
+  <path d="M71 275c51-121 169-206 307-209" fill="none" stroke="#f7e7c3" stroke-width="14" stroke-linecap="round" opacity=".95"/>
+  <path d="M487 76c100 33 177 112 209 213" fill="none" stroke="#e8c46d" stroke-width="18" stroke-linecap="round" opacity=".9"/>
+  <path d="M677 470c-35 112-128 199-244 225" fill="none" stroke="#e8c46d" stroke-width="16" stroke-linecap="round" opacity=".88"/>
+  <path d="M88 494c-31-82-26-176 14-255" fill="none" stroke="#8d1020" stroke-width="18" stroke-linecap="round" opacity=".82"/>
+  <path d="M120 604c59 63 142 100 232 104" fill="none" stroke="#c89433" stroke-width="18" stroke-linecap="round" opacity=".78"/>
+  <path d="M122 352c75-47 153-68 258-68 104 0 195 29 268 82" fill="none" stroke="#fffaf2" stroke-width="8" stroke-linecap="round" opacity=".7"/>
+  <path d="M122 423c84 54 174 78 275 74 94-4 177-35 249-92" fill="none" stroke="#e8c46d" stroke-width="10" stroke-linecap="round" opacity=".75"/>
+  <path d="M233 141c93 35 194 47 306 35" fill="none" stroke="#2ab7ff" stroke-width="10" stroke-linecap="round" opacity=".5"/>
+  <path d="M151 548c90-28 193-33 309-13 71 12 126 30 172 53" fill="none" stroke="#ff4fd8" stroke-width="9" stroke-linecap="round" opacity=".45"/>
+  <g opacity=".85">
+    <path d="M491 97c44 18 83 44 116 77" stroke="#fffaf2" stroke-width="6" stroke-linecap="round"/>
+    <path d="M552 195c37 41 61 90 74 146" stroke="#f7e7c3" stroke-width="8" stroke-linecap="round"/>
+    <path d="M177 262c38-60 91-103 162-130" stroke="#e8c46d" stroke-width="6" stroke-linecap="round"/>
+    <path d="M198 656c44 23 94 36 151 39" stroke="#fffaf2" stroke-width="6" stroke-linecap="round"/>
+  </g>
+</svg>
