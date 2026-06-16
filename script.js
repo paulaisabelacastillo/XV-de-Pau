@@ -172,43 +172,71 @@ function toggleMusic() {
 musicButton?.addEventListener("click", toggleMusic);
 updateMusicButton();
 
-const introVideo = $("#introVideo");
+const introAudio = $("#introAudio");
+const introCarousel = $("#introCarousel");
+const introCarouselPhotos = $$(".intro-carousel-photo");
 const introPlayButton = $("#introPlayButton");
 const introVideoStatus = $("#introVideoStatus");
+let activeIntroPhoto = 0;
 
-function updateIntroVideoButton(isPlaying) {
+// 1. CONTROL DEL CARRUSEL (Corre automáticamente siempre, independiente del audio)
+function showIntroPhoto(index) {
+  if (!introCarouselPhotos.length) return;
+  activeIntroPhoto = (index + introCarouselPhotos.length) % introCarouselPhotos.length;
+  introCarouselPhotos.forEach((photo, photoIndex) => {
+    photo.classList.toggle("is-active", photoIndex === activeIntroPhoto);
+  });
+}
+
+// Se ejecuta cada 3.6 segundos de forma automática desde el inicio
+window.setInterval(() => showIntroPhoto(activeIntroPhoto + 1), 3600);
+
+
+// 2. CONTROL DEL AUDIO (El botón solo afecta al archivo .mp3)
+function updateIntroAudioButton(isPlaying) {
+  const icon = introPlayButton?.querySelector(".audio-action-icon");
+  
   introPlayButton?.classList.toggle("is-playing", isPlaying);
   introPlayButton?.setAttribute(
     "aria-label",
-    isPlaying ? "Pausar video" : "Reproducir video",
+    isPlaying ? "Pausar audio" : "Reproducir audio",
   );
+
+ 
+
+  if (introVideoStatus) {
+    introVideoStatus.textContent = isPlaying ? "Escuchando mensaje especial..." : "Audio en pausa";
+  }
 }
 
 introPlayButton?.addEventListener("click", async () => {
-  if (!introVideo) return;
+  if (!introAudio) return;
 
-  if (!introVideo.paused) {
-    introVideo.pause();
-    updateIntroVideoButton(false);
+  if (!introAudio.paused) {
+    introAudio.pause();
+    updateIntroAudioButton(false);
     return;
   }
 
   try {
+    // Pausa la música de fondo de Spotify para escuchar el mensaje
     await pauseMusic();
-    introVideo.controls = true;
-    await introVideo.play();
-    updateIntroVideoButton(true);
-    if (introVideoStatus) introVideoStatus.textContent = "";
+    await introAudio.play();
+    updateIntroAudioButton(true);
   } catch (error) {
-    console.warn("No se pudo reproducir el video especial.", error);
-    if (introVideoStatus) introVideoStatus.textContent = "Video no disponible";
-    updateIntroVideoButton(false);
+    console.warn("No se pudo reproducir el audio especial.", error);
+    if (introVideoStatus) introVideoStatus.textContent = "Audio no disponible";
+    updateIntroAudioButton(false);
   }
 });
 
-introVideo?.addEventListener("play", () => updateIntroVideoButton(true));
-introVideo?.addEventListener("pause", () => updateIntroVideoButton(false));
-introVideo?.addEventListener("ended", () => updateIntroVideoButton(false));
+// Eventos globales del elemento de audio para mantener sincronizado el botón
+introAudio?.addEventListener("play", () => updateIntroAudioButton(true));
+introAudio?.addEventListener("pause", () => updateIntroAudioButton(false));
+introAudio?.addEventListener("ended", () => {
+  updateIntroAudioButton(false);
+  if (introVideoStatus) introVideoStatus.textContent = "Mensaje finalizado ✨";
+});
 
 function updateCountdown() {
   const countdown = $("#countdown");

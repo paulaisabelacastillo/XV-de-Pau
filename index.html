@@ -11,8 +11,8 @@
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="assets/xv-hero.png" as="image" />
     <link rel="preload" href="img/lugar.jpeg" as="image" />
-    <link rel="stylesheet" href="styles.css?v=formspree-clear-20260614" />
-    <script src="script.js?v=formspree-clear-20260614" defer></script>
+    <link rel="stylesheet" href="styles.css?v=audio-horizontal-20260614" />
+    <script src="script.js?v=audio-horizontal-20260614" defer></script>
   </head>
   <body>
     <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
@@ -35,20 +35,31 @@
     </header>
 
     <main>
-      <section class="section video-section" id="video">
-        <div class="section-inner video-layout">
-          <h2 class="section-title reveal">Antes de seguir explorando, escucha este mensaje especial para ti.</h2>
-          <div class="video-frame reveal">
-            <video class="intro-video" id="introVideo" playsinline preload="metadata">
-              <source src="video/mensaje-especial.mp4" type="video/mp4" />
-            </video>
-            <button class="video-play-slot" id="introPlayButton" type="button" aria-label="Reproducir video">
-              <span aria-hidden="true"></span>
-            </button>
-            <p class="video-status" id="introVideoStatus" aria-live="polite"></p>
-          </div>
-        </div>
-      </section>
+<section class="section video-section" id="video">
+  <div class="section-inner video-layout">
+    <h2 class="section-title reveal">Antes de seguir explorando, toca play y escucha este mensaje especial para ti.</h2>
+    
+    <div class="video-frame reveal">
+      <div class="intro-carousel" id="introCarousel" aria-hidden="true">
+        <img class="intro-carousel-photo is-active" src="img/fotoxv1.JPG" alt="Foto de Pau 1" />
+        <img class="intro-carousel-photo" src="img/fotoxv5.JPG" alt="Foto de Pau 2" />
+        <img class="intro-carousel-photo" src="img/fotoxv8.JPG" alt="Foto de Pau 3" />
+      </div>
+      
+      <audio id="introAudio" preload="metadata">
+        <source src="audio/badbo.mp3" type="audio/mpeg" />
+      </audio>
+      
+      <p class="video-status" id="introVideoStatus" aria-live="polite">Pausa</p>
+    </div>
+
+    <div class="audio-control-row reveal">
+      <button class="video-play-slot" id="introPlayButton" type="button" aria-label="Reproducir audio">
+        <span class="audio-action-icon" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</section>
 
       <section class="section about-section" id="sobre-mi">
         <div class="section-inner">
@@ -245,7 +256,7 @@
 
       <section class="section song-request-section" id="cancion">
         <div class="section-inner song-request-layout">
-          <img class="song-disc-image reveal" src="img/disco.jpeg" alt="Disco de música" />
+          <img class="song-disc-image reveal" src="img/disco.jpg" alt="Disco de música" />
           <div class="song-request-panel reveal">
             <form class="song-request-card" id="songRequestForm" action="https://formspree.io/f/xeewvdjb" method="POST">
               <label for="songRequest">¿Qué canción te gustaría escuchar?</label>
