@@ -2,19 +2,10 @@ const EVENT_DATE = new Date("2026-07-11T19:00:00-05:00");
 const SPOTIFY_TRACK_URI = "spotify:track:2lTm559tuIvatlT1u0JYG2";
 const SPOTIFY_IFRAME_API_URL = "https://open.spotify.com/embed/iframe-api/v1";
 const FORMSPREE_SONG_ENDPOINT = "https://formspree.io/f/xeewvdjb";
-const FIREBASE_SDK_VERSION = "10.12.5";
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyDzY1PY2ZR5z6dk1Vkqg1KsJm8-mSaSGao",
-  authDomain: "xvpau-cc190.firebaseapp.com",
-  projectId: "xvpau-cc190",
-  storageBucket: "xvpau-cc190.firebasestorage.app",
-  messagingSenderId: "876809357381",
-  appId: "1:876809357381:web:9d2ebb1cd463027fe83b2c",
-  measurementId: "G-0EZBRM64QE",
-};
+const RSVP_API_URL = "https://script.google.com/macros/s/AKfycbzaOGuHOvPeCo0znMNDloEaQaktXPF6QLGhKkrOeuEBxwKYCcyge_cXYztGL9JGuw7tXg/exec";
 const STORAGE_KEYS = {
   whatsapp: "xv_pau_whatsapp_confirmed",
-  rsvpEmail: "xv_pau_rsvp_email",
+  rsvpName: "xv_pau_rsvp_name",
   songRequest: "xv_pau_song_request",
 };
 
@@ -27,7 +18,6 @@ let isMusicPlaying = false;
 let spotifyIframeApiPromise = null;
 let spotifyControllerPromise = null;
 let spotifyController = null;
-let firebaseClientPromise = null;
 
 // Animacion de entrada para que el scroll se sienta cinematografico.
 const revealObserver = new IntersectionObserver(
@@ -179,7 +169,15 @@ const introPlayButton = $("#introPlayButton");
 const introVideoStatus = $("#introVideoStatus");
 let activeIntroPhoto = 0;
 
-// 1. CONTROL DEL CARRUSEL (Corre automáticamente siempre, independiente del audio)
+function updateIntroAudioButton(isPlaying) {
+  introPlayButton?.classList.toggle("is-playing", isPlaying);
+  introCarousel?.classList.toggle("is-playing", isPlaying);
+  introPlayButton?.setAttribute(
+    "aria-label",
+    isPlaying ? "Pausar audio" : "Reproducir audio",
+  );
+}
+
 function showIntroPhoto(index) {
   if (!introCarouselPhotos.length) return;
   activeIntroPhoto = (index + introCarouselPhotos.length) % introCarouselPhotos.length;
@@ -188,26 +186,7 @@ function showIntroPhoto(index) {
   });
 }
 
-// Se ejecuta cada 3.6 segundos de forma automática desde el inicio
 window.setInterval(() => showIntroPhoto(activeIntroPhoto + 1), 3600);
-
-
-// 2. CONTROL DEL AUDIO (El botón solo afecta al archivo .mp3)
-function updateIntroAudioButton(isPlaying) {
-  const icon = introPlayButton?.querySelector(".audio-action-icon");
-  
-  introPlayButton?.classList.toggle("is-playing", isPlaying);
-  introPlayButton?.setAttribute(
-    "aria-label",
-    isPlaying ? "Pausar audio" : "Reproducir audio",
-  );
-
- 
-
-  if (introVideoStatus) {
-    introVideoStatus.textContent = isPlaying ? "Escuchando mensaje especial..." : "Audio en pausa";
-  }
-}
 
 introPlayButton?.addEventListener("click", async () => {
   if (!introAudio) return;
@@ -219,10 +198,10 @@ introPlayButton?.addEventListener("click", async () => {
   }
 
   try {
-    // Pausa la música de fondo de Spotify para escuchar el mensaje
     await pauseMusic();
     await introAudio.play();
     updateIntroAudioButton(true);
+    if (introVideoStatus) introVideoStatus.textContent = "";
   } catch (error) {
     console.warn("No se pudo reproducir el audio especial.", error);
     if (introVideoStatus) introVideoStatus.textContent = "Audio no disponible";
@@ -230,13 +209,9 @@ introPlayButton?.addEventListener("click", async () => {
   }
 });
 
-// Eventos globales del elemento de audio para mantener sincronizado el botón
 introAudio?.addEventListener("play", () => updateIntroAudioButton(true));
 introAudio?.addEventListener("pause", () => updateIntroAudioButton(false));
-introAudio?.addEventListener("ended", () => {
-  updateIntroAudioButton(false);
-  if (introVideoStatus) introVideoStatus.textContent = "Mensaje finalizado ✨";
-});
+introAudio?.addEventListener("ended", () => updateIntroAudioButton(false));
 
 function updateCountdown() {
   const countdown = $("#countdown");
@@ -269,77 +244,19 @@ $$("img").forEach((image) => {
   }, { once: true });
 });
 
-async function getFirebaseClient() {
-  if (!firebaseClientPromise) {
-    const appUrl = `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-app.js`;
-    const firestoreUrl = `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-firestore.js`;
-    firebaseClientPromise = Promise.all([import(appUrl), import(firestoreUrl)]).then(
-      ([appModule, firestoreModule]) => {
-        const app = appModule.initializeApp(FIREBASE_CONFIG);
-        return {
-          db: firestoreModule.getFirestore(app),
-          doc: firestoreModule.doc,
-          getDoc: firestoreModule.getDoc,
-          updateDoc: firestoreModule.updateDoc,
-        };
-      },
-    );
-  }
-
-  return firebaseClientPromise;
-}
-
-function normalizeEmail(value) {
-  return value.trim().toLowerCase();
-}
-
-function getGuestNames(inviteData) {
-  if (Array.isArray(inviteData.nombres)) return inviteData.nombres.filter(Boolean).join(", ");
-  return inviteData.nombres || inviteData.nombre || inviteData.invitados || "Invitado";
-}
-
-function getGuestSeats(inviteData) {
-  return Number(inviteData.cupos ?? inviteData.cantidadCupos ?? inviteData.cantidad ?? 0);
-}
-
-async function findInviteByEmail(firebase, email) {
-  const directRef = firebase.doc(firebase.db, "invitados", email);
-  const directSnapshot = await firebase.getDoc(directRef);
-  if (!directSnapshot.exists()) return null;
-  return { data: directSnapshot.data(), ref: directRef };
-}
-
-function getFirebaseErrorMessage(error) {
-  if (error?.code === "permission-denied") {
-    return "Firebase bloqueó la búsqueda. Publica las reglas de Firestore para permitir leer invitados.";
-  }
-
-  if (error?.code === "unavailable") {
-    return "Firebase no está disponible ahora. Revisa la conexión e intenta de nuevo.";
-  }
-
-  return "No pude conectar con Firebase. Intenta de nuevo.";
-}
-
-function getFirebaseSaveErrorMessage(error) {
-  if (error?.code === "permission-denied") {
-    return "Firebase bloqueó la confirmación. Publica las reglas de Firestore para actualizar confirmacion.";
-  }
-
-  return "No pude guardar la confirmación. Intenta de nuevo.";
-}
-
 const rsvpLookupForm = $("#rsvpLookupForm");
-const guestEmailInput = $("#guestEmail");
+const rsvpLookupButton = $("#rsvpLookupButton");
+const rsvpTitle = $("#rsvpTitle");
+const guestNameInput = $("#guestName");
 const rsvpResult = $("#rsvpResult");
 const rsvpStatus = $("#rsvpStatus");
 const guestNamesTarget = $("#guestNames");
 const guestSeatsTarget = $("#guestSeats");
-const firebaseConfirmButton = $("#firebaseConfirmButton");
+const sheetConfirmButton = $("#sheetConfirmButton");
 let currentInvite = null;
 
-if (guestEmailInput) {
-  guestEmailInput.value = localStorage.getItem(STORAGE_KEYS.rsvpEmail) || "";
+if (guestNameInput) {
+  guestNameInput.value = localStorage.getItem(STORAGE_KEYS.rsvpName) || "";
 }
 
 function setRsvpStatus(message, type = "info") {
@@ -348,56 +265,182 @@ function setRsvpStatus(message, type = "info") {
   rsvpStatus.dataset.type = type;
 }
 
-rsvpLookupForm?.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const email = normalizeEmail(guestEmailInput?.value || "");
-  if (!email) return;
+function requestRsvpApi(params) {
+  return new Promise((resolve, reject) => {
+    const callbackName = `xvPauRsvp_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    const url = new URL(RSVP_API_URL);
+    const script = document.createElement("script");
+    let timeoutId;
 
-  localStorage.setItem(STORAGE_KEYS.rsvpEmail, email);
-  setRsvpStatus("Buscando invitación...");
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) url.searchParams.set(key, value);
+    });
+    url.searchParams.set("callback", callbackName);
+
+    const cleanup = () => {
+      window.clearTimeout(timeoutId);
+      delete window[callbackName];
+      script.remove();
+    };
+
+    window[callbackName] = (data) => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("No pude conectar con la lista de invitados."));
+    };
+
+    timeoutId = window.setTimeout(() => {
+      cleanup();
+      reject(new Error("La lista de invitados tardó demasiado en responder."));
+    }, 12000);
+
+    script.src = url.toString();
+    document.body.appendChild(script);
+  });
+}
+
+function normalizeGuestSearch(value) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function showSelectedGuest(guest) {
+  currentInvite = guest;
+  if (guestNameInput) {
+    guestNameInput.value = guest.nombre;
+    localStorage.setItem(STORAGE_KEYS.rsvpName, guest.nombre);
+  }
+  if (guestNamesTarget) guestNamesTarget.textContent = guest.nombre;
+  if (guestSeatsTarget) guestSeatsTarget.textContent = String(guest.cupos);
+  if (rsvpResult) rsvpResult.hidden = false;
+  if (rsvpLookupForm) rsvpLookupForm.hidden = true;
+  if (rsvpTitle) rsvpTitle.hidden = true;
+
+  const isConfirmed = String(guest.confirmado || "").toUpperCase() === "SI";
+  setRsvpStatus(isConfirmed ? "Esta invitación ya aparece confirmada." : "");
+}
+
+function findAcceptedGuest(guests, query) {
+  const normalizedQuery = normalizeGuestSearch(query);
+  const exactGuest = guests.find((guest) => normalizeGuestSearch(guest.nombre) === normalizedQuery);
+  if (exactGuest) return exactGuest;
+  if (guests.length === 1) return guests[0];
+
+  const closeGuests = guests.filter((guest) => {
+    const normalizedName = normalizeGuestSearch(guest.nombre);
+    return normalizedName.startsWith(normalizedQuery) || normalizedQuery.startsWith(normalizedName);
+  });
+
+  return closeGuests.length === 1 ? closeGuests[0] : null;
+}
+
+async function searchGuestsByName(query) {
+  const q = query.trim();
+  if (q.length < 3) {
+    return [];
+  }
+
   if (rsvpResult) rsvpResult.hidden = true;
 
   try {
-    const firebase = await getFirebaseClient();
-    const invitation = await findInviteByEmail(firebase, email);
+    const data = await requestRsvpApi({ q });
+    if (!data?.ok) throw new Error(data?.message || "No pude leer la lista de invitados.");
 
-    if (!invitation) {
-      currentInvite = null;
-      setRsvpStatus("No encontré una invitación con ese email.", "error");
-      return;
-    }
-
-    const inviteData = invitation.data;
-    const nombres = getGuestNames(inviteData);
-    const cupos = getGuestSeats(inviteData);
-    currentInvite = { cupos, email, guestRef: invitation.ref, nombres };
-
-    if (guestNamesTarget) guestNamesTarget.textContent = nombres;
-    if (guestSeatsTarget) guestSeatsTarget.textContent = String(cupos);
-    if (rsvpResult) rsvpResult.hidden = false;
-    setRsvpStatus(inviteData.confirmacion ? "Esta invitación ya aparece confirmada." : "");
+    return Array.isArray(data.guests) ? data.guests : [];
   } catch (error) {
     console.error(error);
-    setRsvpStatus(getFirebaseErrorMessage(error), "error");
+    setRsvpStatus(error.message, "error");
+    return [];
   }
-});
+}
 
-firebaseConfirmButton?.addEventListener("click", async () => {
-  if (!currentInvite) {
-    setRsvpStatus("Primero busca tu invitación por email.", "error");
+function handleGuestNameTyping() {
+  const value = guestNameInput.value;
+  currentInvite = null;
+  localStorage.setItem(STORAGE_KEYS.rsvpName, value);
+  if (rsvpResult) rsvpResult.hidden = true;
+  if (rsvpLookupForm) rsvpLookupForm.hidden = false;
+  if (rsvpTitle) rsvpTitle.hidden = false;
+  setRsvpStatus("");
+}
+
+guestNameInput?.addEventListener("input", handleGuestNameTyping);
+guestNameInput?.addEventListener("compositionend", handleGuestNameTyping);
+
+rsvpLookupForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const query = guestNameInput?.value || "";
+  const originalText = rsvpLookupButton?.textContent;
+
+  if (query.trim().length < 3) {
+    setRsvpStatus("Escribe tu nombre completo.", "error");
     return;
   }
 
+  setRsvpStatus("");
+  if (rsvpLookupButton) {
+    rsvpLookupButton.disabled = true;
+    rsvpLookupButton.textContent = "Verificando...";
+  }
+
+  const guests = await searchGuestsByName(query);
+  const acceptedGuest = findAcceptedGuest(guests, query);
+
+  if (acceptedGuest) {
+    showSelectedGuest(acceptedGuest);
+  } else {
+    currentInvite = null;
+    setRsvpStatus("No encontré ese nombre en la lista.", "error");
+  }
+
+  if (rsvpLookupButton) {
+    rsvpLookupButton.disabled = false;
+    rsvpLookupButton.textContent = originalText;
+  }
+});
+
+sheetConfirmButton?.addEventListener("click", async () => {
+  if (!currentInvite) {
+    setRsvpStatus("Primero selecciona tu nombre.", "error");
+    return;
+  }
+
+  if (String(currentInvite.confirmado || "").toUpperCase() === "SI") {
+    setRsvpStatus("Esta invitación ya aparece confirmada.");
+    return;
+  }
+
+  const originalText = sheetConfirmButton.textContent;
   setRsvpStatus("Confirmando asistencia...");
+  sheetConfirmButton.disabled = true;
+  sheetConfirmButton.textContent = "Confirmando...";
+
   try {
-    const firebase = await getFirebaseClient();
-    await firebase.updateDoc(currentInvite.guestRef, { confirmacion: true });
+    const data = await requestRsvpApi({ action: "confirm", id: currentInvite.id });
+    if (!data?.ok) throw new Error(data?.message || "No pude guardar la confirmación.");
+
+    currentInvite = {
+      ...currentInvite,
+      confirmado: data.confirmado || "SI",
+      fechaConfirmacion: data.fechaConfirmacion,
+    };
     localStorage.setItem(STORAGE_KEYS.whatsapp, new Date().toISOString());
     setRsvpStatus("Asistencia confirmada.");
     createSparkBurst(window.innerWidth / 2, window.innerHeight * 0.45, 18);
   } catch (error) {
     console.error(error);
-    setRsvpStatus(getFirebaseSaveErrorMessage(error), "error");
+    setRsvpStatus(error.message, "error");
+  } finally {
+    sheetConfirmButton.disabled = false;
+    sheetConfirmButton.textContent = originalText;
   }
 });
 

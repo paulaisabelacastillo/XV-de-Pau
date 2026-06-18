@@ -11,8 +11,8 @@
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="assets/xv-hero.png" as="image" />
     <link rel="preload" href="img/lugar.jpeg" as="image" />
-    <link rel="stylesheet" href="styles.css?v=audio-horizontal-20260614" />
-    <script src="script.js?v=audio-horizontal-20260614" defer></script>
+    <link rel="stylesheet" href="styles.css?v=rsvp-no-suggestions-20260615" />
+    <script src="script.js?v=rsvp-no-suggestions-20260615" defer></script>
   </head>
   <body>
     <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
@@ -35,31 +35,27 @@
     </header>
 
     <main>
-<section class="section video-section" id="video">
-  <div class="section-inner video-layout">
-    <h2 class="section-title reveal">Antes de seguir explorando, toca play y escucha este mensaje especial para ti.</h2>
-    
-    <div class="video-frame reveal">
-      <div class="intro-carousel" id="introCarousel" aria-hidden="true">
-        <img class="intro-carousel-photo is-active" src="img/fotoxv1.JPG" alt="Foto de Pau 1" />
-        <img class="intro-carousel-photo" src="img/fotoxv5.JPG" alt="Foto de Pau 2" />
-        <img class="intro-carousel-photo" src="img/fotoxv8.JPG" alt="Foto de Pau 3" />
-      </div>
-      
-      <audio id="introAudio" preload="metadata">
-        <source src="audio/badbo.mp3" type="audio/mpeg" />
-      </audio>
-      
-      <p class="video-status" id="introVideoStatus" aria-live="polite">Pausa</p>
-    </div>
-
-    <div class="audio-control-row reveal">
-      <button class="video-play-slot" id="introPlayButton" type="button" aria-label="Reproducir audio">
-        <span class="audio-action-icon" aria-hidden="true"></span>
-      </button>
-    </div>
-  </div>
-</section>
+      <section class="section video-section" id="video">
+        <div class="section-inner video-layout">
+          <h2 class="section-title reveal">Antes de seguir explorando, toca play y escucha este mensaje especial para ti.</h2>
+          <div class="video-frame reveal">
+            <div class="intro-carousel" id="introCarousel" aria-hidden="true">
+              <img class="intro-carousel-photo is-active" src="img/fotoxv1.JPG" alt="" />
+              <img class="intro-carousel-photo" src="img/fotoxv5.JPG" alt="" />
+              <img class="intro-carousel-photo" src="img/fotoxv8.JPG" alt="" />
+            </div>
+            <audio id="introAudio" preload="metadata">
+              <source src="video/badbo.mp3" type="audio/mpeg" />
+            </audio>
+            <p class="video-status" id="introVideoStatus" aria-live="polite"></p>
+          </div>
+          <div class="audio-control-row reveal">
+            <button class="video-play-slot" id="introPlayButton" type="button" aria-label="Reproducir audio">
+              <span class="audio-action-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </section>
 
       <section class="section about-section" id="sobre-mi">
         <div class="section-inner">
@@ -231,19 +227,18 @@
       <section class="section rsvp-section" id="confirmar">
         <div class="section-inner confirm-layout">
           <div class="confirm-copy reveal">
-            <h2>Cada invitado hace esta noche aún más especial. ¿Podré contar contigo?</h2>
+            <h2 id="rsvpTitle">Cada invitado hace esta noche aún más especial. ¿Podré contar contigo?</h2>
             <form class="rsvp-form" id="rsvpLookupForm">
-              <label for="guestEmail">Email</label>
+              <label for="guestName">Nombre</label>
               <div class="rsvp-search">
-                <input id="guestEmail" name="guestEmail" type="email" autocomplete="email" required />
-                <button class="whatsapp-button" type="submit">Buscar invitación</button>
+                <input id="guestName" name="guestName" type="text" autocomplete="off" required />
               </div>
+              <button class="solid-button rsvp-lookup-button" id="rsvpLookupButton" type="submit">Buscar invitación</button>
             </form>
             <div class="rsvp-result" id="rsvpResult" hidden>
-              <span>Invitación encontrada</span>
               <strong id="guestNames"></strong>
               <p><b id="guestSeats"></b> cupos</p>
-              <button class="solid-button" id="firebaseConfirmButton" type="button">Confirmar asistencia</button>
+              <button class="solid-button" id="sheetConfirmButton" type="button">Confirmar asistencia</button>
             </div>
             <p class="rsvp-status" id="rsvpStatus" aria-live="polite"></p>
           </div>

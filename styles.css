@@ -866,6 +866,10 @@ body.music-on .disc-face {
   margin-top: 22px;
 }
 
+.rsvp-form[hidden] {
+  display: none;
+}
+
 .rsvp-form label,
 .rsvp-result span,
 .rsvp-status {
@@ -879,6 +883,7 @@ body.music-on .disc-face {
 .rsvp-search {
   display: grid;
   gap: 10px;
+  position: relative;
 }
 
 .rsvp-search input {
@@ -899,18 +904,22 @@ body.music-on .disc-face {
   outline-offset: 3px;
 }
 
-.rsvp-search .whatsapp-button {
-  margin-top: 0;
+.rsvp-lookup-button {
+  width: 100%;
+  min-height: 58px;
+  margin-top: 8px;
+  border-radius: 999px;
 }
 
 .rsvp-result {
   display: grid;
-  gap: 8px;
-  margin-top: 18px;
-  border: 2px solid var(--black);
-  border-radius: var(--radius);
-  background: var(--paper);
-  padding: 16px;
+  justify-items: center;
+  gap: 18px;
+  margin-top: 0;
+  border: 0;
+  background: transparent;
+  padding: 10px 0 2px;
+  text-align: center;
 }
 
 .rsvp-result[hidden] {
@@ -919,21 +928,27 @@ body.music-on .disc-face {
 
 .rsvp-result strong {
   font-family: "Bodoni 72", Didot, Georgia, serif;
-  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-size: clamp(2.35rem, 6vw, 4.2rem);
   font-weight: 900;
-  line-height: 1;
+  line-height: 0.95;
+  max-width: 12ch;
 }
 
 .rsvp-result p {
   margin: 0;
-  font-size: 1rem;
-  font-weight: 900;
+  color: var(--black);
+  font-size: clamp(1rem, 2.3vw, 1.25rem);
+  font-weight: 850;
+  text-transform: uppercase;
 }
 
 .rsvp-result .solid-button {
-  width: max-content;
-  max-width: 100%;
-  margin-top: 6px;
+  width: min(100%, 360px);
+  min-height: 58px;
+  margin-top: 4px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
 }
 
 .rsvp-status {
