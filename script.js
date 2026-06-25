@@ -184,8 +184,12 @@ function showIntroPhoto(index) {
   introCarouselPhotos.forEach((photo, photoIndex) => {
     photo.classList.toggle("is-active", photoIndex === activeIntroPhoto);
   });
+  const activePhoto = introCarouselPhotos[activeIntroPhoto];
+  const activePhotoSrc = activePhoto?.currentSrc || activePhoto?.getAttribute("src") || activePhoto?.src;
+  if (activePhotoSrc) introCarousel?.style.setProperty("--intro-bg", `url("${activePhotoSrc}")`);
 }
 
+showIntroPhoto(activeIntroPhoto);
 window.setInterval(() => showIntroPhoto(activeIntroPhoto + 1), 3600);
 
 introPlayButton?.addEventListener("click", async () => {
@@ -595,16 +599,7 @@ resizeCanvas();
 drawParticles();
 
 function createSparkBurst(x, y, amount = 8) {
-  for (let i = 0; i < amount; i += 1) {
-    const spark = document.createElement("span");
-    spark.className = "tap-spark";
-    spark.style.left = `${x}px`;
-    spark.style.top = `${y}px`;
-    spark.style.setProperty("--spark-x", `${(Math.random() - 0.5) * 140}px`);
-    spark.style.setProperty("--spark-y", `${-30 - Math.random() * 110}px`);
-    document.body.appendChild(spark);
-    spark.addEventListener("animationend", () => spark.remove(), { once: true });
-  }
+  return { x, y, amount };
 }
 
 function createEnvelopeRain(amount = 16) {
@@ -666,20 +661,3 @@ function createConfettiRain(amount = 32) {
     confetti.addEventListener("animationend", () => confetti.remove(), { once: true });
   }
 }
-
-document.addEventListener("pointerdown", (event) => {
-  createSparkBurst(event.clientX, event.clientY, 4);
-});
-
-// Ripple tactil en botones y enlaces destacados.
-$$("button, .solid-button, .scroll-button, .whatsapp-button").forEach((element) => {
-  element.addEventListener("pointerdown", (event) => {
-    const rect = element.getBoundingClientRect();
-    const ripple = document.createElement("span");
-    ripple.className = "ripple";
-    ripple.style.left = `${event.clientX - rect.left - 9}px`;
-    ripple.style.top = `${event.clientY - rect.top - 9}px`;
-    element.appendChild(ripple);
-    ripple.addEventListener("animationend", () => ripple.remove(), { once: true });
-  });
-});

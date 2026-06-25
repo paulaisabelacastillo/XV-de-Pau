@@ -267,8 +267,22 @@ body.music-on .disc-face {
   height: 100%;
 }
 
+.intro-carousel::before {
+  position: absolute;
+  z-index: 0;
+  inset: -18px;
+  content: "";
+  background-image: var(--intro-bg);
+  background-position: center;
+  background-size: cover;
+  filter: blur(16px);
+  opacity: 0;
+  transform: scale(1.08);
+}
+
 .intro-carousel::after {
   position: absolute;
+  z-index: 2;
   inset: 0;
   content: "";
   background:
@@ -279,6 +293,7 @@ body.music-on .disc-face {
 
 .intro-carousel-photo {
   position: absolute;
+  z-index: 1;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -1096,8 +1111,7 @@ body.music-on .disc-face {
 .envelope-rain,
 .plane-rain,
 .money-rain,
-.confetti-piece,
-.ripple {
+.confetti-piece {
   position: fixed;
   z-index: 90;
   width: 10px;
@@ -1166,14 +1180,6 @@ body.music-on .disc-face {
   border-radius: 2px;
   background: var(--confetti-color, var(--red));
   animation: envelope-fall 1.25s ease-in forwards;
-}
-
-.ripple {
-  position: absolute;
-  z-index: 1;
-  width: 18px;
-  height: 18px;
-  background: rgba(5, 5, 5, 0.16);
 }
 
 @keyframes bounce {
@@ -1285,6 +1291,28 @@ body.music-on .disc-face {
 
 }
 
+@media (max-width: 760px) {
+  .video-frame {
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    max-height: none;
+  }
+
+  .intro-carousel::before {
+    opacity: 0;
+  }
+
+  .intro-carousel-photo {
+    object-fit: cover;
+    transform: scale(1.04);
+  }
+
+  .intro-carousel.is-playing .intro-carousel-photo.is-active {
+    animation: carouselPulse 5s ease-in-out infinite;
+  }
+}
+
 @media (max-width: 430px) {
   .hero {
     padding-inline: 12px;
@@ -1307,6 +1335,59 @@ body.music-on .disc-face {
 
   .music-status {
     font-size: 0.5rem;
+  }
+
+  .video-layout {
+    gap: 16px;
+  }
+
+  .video-section .section-title {
+    font-size: clamp(1.35rem, 7vw, 1.85rem);
+  }
+
+  .video-frame {
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    max-height: none;
+  }
+
+  .intro-carousel::before {
+    opacity: 0;
+  }
+
+  .intro-carousel-photo {
+    object-fit: cover;
+    transform: scale(1.04);
+  }
+
+  .intro-carousel.is-playing .intro-carousel-photo.is-active {
+    animation: carouselPulse 5s ease-in-out infinite;
+  }
+
+  .audio-control-row {
+    min-height: auto;
+  }
+
+  .video-play-slot {
+    min-height: 64px;
+  }
+
+  .video-play-slot::before {
+    inset: 9px;
+  }
+
+  .audio-action-icon {
+    border-top-width: 14px;
+    border-bottom-width: 14px;
+    border-left-width: 24px;
+  }
+
+  .video-play-slot.is-playing .audio-action-icon {
+    width: 24px;
+    height: 28px;
+    border-left-width: 8px;
+    border-right-width: 8px;
   }
 
   .photo-pair,
