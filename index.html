@@ -232,6 +232,21 @@
         </div>
       </section>
 
+      <section class="section song-request-section" id="cancion">
+        <div class="section-inner song-request-layout">
+          <img class="song-disc-image reveal" src="img/disco.jpeg" alt="Disco de música" />
+          <div class="song-request-panel reveal">
+            <form class="song-request-card" id="songRequestForm" action="https://formspree.io/f/xeewvdjb" method="POST">
+              <label for="songRequest">¿Qué canción te gustaría escuchar?</label>
+              <textarea id="songRequest" name="message" rows="4"></textarea>
+              <button class="solid-button song-submit" type="submit">Enviar recomendación</button>
+              <p class="song-status" id="songStatus" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
       <section class="section rsvp-section" id="confirmar">
         <div class="section-inner confirm-layout">
           <div class="confirm-copy reveal">
@@ -256,21 +271,6 @@
           </div>
         </div>
       </section>
-
-      <section class="section song-request-section" id="cancion">
-        <div class="section-inner song-request-layout">
-          <img class="song-disc-image reveal" src="img/disco.jpg" alt="Disco de música" />
-          <div class="song-request-panel reveal">
-            <form class="song-request-card" id="songRequestForm" action="https://formspree.io/f/xeewvdjb" method="POST">
-              <label for="songRequest">¿Qué canción te gustaría escuchar?</label>
-              <textarea id="songRequest" name="message" rows="4"></textarea>
-              <button class="solid-button song-submit" type="submit">Enviar recomendación</button>
-              <p class="song-status" id="songStatus" aria-live="polite"></p>
-            </form>
-          </div>
-        </div>
-      </section>
-    </main>
 
     <footer class="footer">
       Creado por © Paula Castillo Linero
